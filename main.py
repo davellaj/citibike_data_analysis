@@ -186,23 +186,6 @@ citibike_stations_list.sort(key=lambda sta: sta['totalDocks'])
 least_totalDocks_stations = citibike_stations_list[13:33]
 most_totalDocks_stations = citibike_stations_list[-20:]
 
-# for item in least_totalDocks_stations:
-#     print('totalDocks', item['totalDocks'], "station ", item['stationName'])
-
-# for item in most_totalDocks_stations:
-#     print('totalDocks', item['totalDocks'], "station ", item['stationName'])
-# sorting
-# docks = [{"total_stations": 3}, {"total_stations": 5}]
-# two count functions below are the same the first is just shorthand
-# count = [sta["total_docks"] for sta in stations]
-# count = []; for sta in stations: count.append(sta["total_docks"])
-# stations.sort(key=lambda sta: sta["total_docks"])
-    # lambda sta: sta["total_docks"]
-# lamda is a function and the above is a shorthand to sort a list of dictionaries, below are longhand.
-# (sta) => sta["total_docks"]
-# def <anonymous>(sta): return sta["total_docks"]
-# writing a reverse/descending sort --> lambda sta: -sta["total_docks"]
-
 # example output:
 # most_totalDocks_stations = [
 #                 {
@@ -240,37 +223,47 @@ most_totalDocks_stations = citibike_stations_list[-20:]
 #             ]
 
 def get_distance_most_totalDocks():
-    most_totalDocks_distance = []
+    most_totalDocks_distance = {'stations' : [], 'distance_list': []}
 
     for citibike in most_totalDocks_stations:
         distance_to_metro = 10000
         shortest_metro = {}
+
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['latitude'], citibike['longitude']))
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
                 shortest_metro = metro
-        most_totalDocks_distance.append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        most_totalDocks_distance['stations'].append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        most_totalDocks_distance['distance_list'].append(distance_to_metro)
     return most_totalDocks_distance
 
 def get_distance_least_totalDocks():
-    least_totalDocks_distance = []
+    least_totalDocks_distance = {'stations' : [], 'distance_list': []}
 
     for citibike in least_totalDocks_stations:
         distance_to_metro = 10000
         shortest_metro = {}
+
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['latitude'], citibike['longitude']))
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
                 shortest_metro = metro
-        least_totalDocks_distance.append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        least_totalDocks_distance['stations'].append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        least_totalDocks_distance['distance_list'].append(distance_to_metro)
     return least_totalDocks_distance
 
 # print(get_distance_most_totalDocks())
 # print(get_distance_least_totalDocks())
+
+def get_max(list):
+    return max(list)
+
+def get_min(list):
+    return min(list)
 
 def print_docks_distances():
     most_docks_distances = get_distance_most_totalDocks()
@@ -281,21 +274,21 @@ def print_docks_distances():
     least_count = 0
 
     print("Most total docks citibike station distances")
-    for station in most_docks_distances:
+    for station in most_docks_distances['stations']:
         most_avg += station['distance_to_metro']
         most_count += 1
         print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['stationName'] )
 
     print("Least total docks citibike station distances")
-    for station in least_docks_distances:
+    for station in least_docks_distances['stations']:
         least_avg += station['distance_to_metro']
         least_count += 1
         print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['stationName'] )
-    print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count)
-    print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count)
+    print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count, 'max distance: ', get_max(most_docks_distances['distance_list']), 'min distance: ', get_min(most_docks_distances['distance_list']))
+    print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count, 'max distance: ', get_max(least_docks_distances['distance_list']), 'min distance: ', get_min(least_docks_distances['distance_list']))
 
 
-print_docks_distances()
+# print_docks_distances()
 # print_popular_distances()
 
 
@@ -342,6 +335,20 @@ print_docks_distances()
 #
 # locu_search('new york')
 
+# notes on sorting ---------------------
+# sorting
+# docks = [{"total_stations": 3}, {"total_stations": 5}]
+# two count functions below are the same the first is just shorthand
+# count = [sta["total_docks"] for sta in stations]
+# count = []; for sta in stations: count.append(sta["total_docks"])
+# stations.sort(key=lambda sta: sta["total_docks"])
+    # lambda sta: sta["total_docks"]
+# lamda is a function and the above is a shorthand to sort a list of dictionaries, below are longhand.
+# (sta) => sta["total_docks"]
+# def <anonymous>(sta): return sta["total_docks"]
+# writing a reverse/descending sort --> lambda sta: -sta["total_docks"]
+
+# notes on graphing ---------------------
 # graphing
 # matplotlib
 # plt.show()
