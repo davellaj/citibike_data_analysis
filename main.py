@@ -164,7 +164,7 @@ def print_popular_distances():
     print("Best Citibike station AVG distance to Metro: ", best_avg/best_count)
     print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count)
 
-# print_popular_distances()
+print_popular_distances()
 
 
 # compute distance to metro based on data from api of totalDocs at a citibike station
@@ -325,3 +325,19 @@ print_popular_distances()
 #         print item['phone']
 #
 # locu_search('new york')
+
+
+# sorting
+# docks = [{"total_stations": 3}, {"total_stations": 5}]
+# count = [sta["total_docks"] for sta in stations]
+# count = []; for sta in stations: count.append(sta["total_docks"])
+# stations.sort(key=lambda sta: sta["total_docks"])
+# lambda sta: sta["total_docks"]
+# (sta) => sta["total_docks"]
+# def <anonymous>(sta): return sta["total_docks"]
+# lambda sta: -sta["total_docks"]
+
+# graphing
+# matplotlib
+# plt.show()
+# plt.save("figure.png")
