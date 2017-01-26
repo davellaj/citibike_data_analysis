@@ -6,8 +6,10 @@
 # return the distance to metro station for the top 10 stations
 # return the distance to metro station for the bottom 10 stations
 # print results on scatterplot with circles to reflect distance or a bar chart one mar is metro stop one bar is distance
+# print map with worst citibike stations / best citibike locations
 # make interface where my friends who aren't tech savy can draw information for the queries
 # site where you can view the queries I made, or maybe a blog post that allows users to post suggestions for queries.
+# place where people can post their work/queries/projects/ideas about public transportation
 
 from math import radians, cos, sin, asin, sqrt
 import csv
@@ -55,20 +57,20 @@ import csv
 # https://docs.python.org/3/library/csv.html
 
 
-def haversine(lon1, lat1, lon2, lat2):
-    """
-    Calculate the great circle distance between two points
-    on the earth (specified in decimal degrees)
-    """
-    # convert decimal degrees to radians
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
-    # haversine formula
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a))
-    km = 6367 * c
-    return km
+# def haversine(lon1, lat1, lon2, lat2):
+#     """
+#     Calculate the great circle distance between two points
+#     on the earth (specified in decimal degrees)
+#     """
+#     # convert decimal degrees to radians
+#     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+#     # haversine formula
+#     dlon = lon2 - lon1
+#     dlat = lat2 - lat1
+#     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+#     c = 2 * asin(sqrt(a))
+#     km = 6367 * c
+#     return km
 
 def manhattan_distance(start, end):
     s_lat, s_lon = start
@@ -76,7 +78,7 @@ def manhattan_distance(start, end):
     # print(start, end)
     return abs(e_lat - s_lat) + abs(e_lon - s_lon)
 
-# search through data set and look for closest latlong
+# search through data set and look for closest latlong to citibike station
 # calculate latlong distance:
 
 # example input
@@ -92,7 +94,6 @@ citibike_stations = [
                     ]
 
 # example output
-# observation - top citibike station all next to the same metro stop
 # [
 #     {
 #         citibike station:  {'lat': 40.7423543, 'lon': -73.98915076, 'name': 'Broadway & W 24 St'},
@@ -112,6 +113,7 @@ citibike_stations = [
 #         temp_distance 1.6639293851898207,
 #     }
 # ]
+# observation - top citibike station all next to the same metro stop
 
 # getting data from metro station csv file
 # Division,Line,Station_Name,Station_Latitude,Station_Longitude,Route_1,Route_2,Route_3,Route_4,Route_5,Route_6,Route_7,Route_8,Route_9,Route_10,Route_11,Entrance_Type,Entry,Exit_Only,Vending,Staffing,Staff_Hours,ADA,ADA_Notes,Free_Crossover,North_South_Street,East_West_Street,Corner,Latitude,Longitude
@@ -125,10 +127,39 @@ with open('metro_station_entrances_nyc.csv') as csvfile:
                                     'lat' : float(row['Station_Latitude']),
                                     'lon' : float(row['Station_Longitude']),
                                 })
+#  citibike best station dataset
+# only selected usertype to be subscribers as opposed to customers
+citibike_best_stations_csv = []
+with open('citibike_best_desc.csv') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        # print(row['Station_Name'], row['Station_Latitude'], row['Station_Longitude'],)
+        citibike_best_stations_csv.append({
+                                            'citibike_station_name' : row['start_station_name'],
+                                            'lat' : float(row['start_station_latitude']),
+                                            'lon' : float(row['start_station_longitude']),
+                                            'num_trips' : int(row['num_trips']),
+                                        })
+# citibike worst stations data set
+# only selected usertype to be subscribers as opposed to customers
+citibike_worst_stations_csv = []
+with open('citibike_worst_asc.csv') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        # print(row['Station_Name'], row['Station_Latitude'], row['Station_Longitude'],)
+        citibike_worst_stations_csv.append({
+                                            'citibike_station_name' : row['start_station_name'],
+                                            'lat' : float(row['start_station_latitude']),
+                                            'lon' : float(row['start_station_longitude']),
+                                            'num_trips' : int(row['num_trips']),
+                                        })
+# print(citibike_worst_stations_csv)
+# print(citibike_best_stations_csv)
 
-mode_distance = []
+
 def get_distance():
-    for citibike in citibike_stations:
+    mode_distance = []
+    for citibike in citibike_stations_csv:
         distance_to_metro = 1000
         shortest_metro = {}
         for metro in metro_stations_csv:
@@ -141,5 +172,5 @@ def get_distance():
         mode_distance.append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
     return mode_distance
 
-get_distance()
+# get_distance()
 # print(get_distance())
