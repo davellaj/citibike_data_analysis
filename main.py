@@ -58,7 +58,6 @@ def manhattan_distance(start, end):
     # print(start, end)
     return abs(e_lat - s_lat) + abs(e_lon - s_lon)
 
-
 # getting data from metro station csv file: https://docs.python.org/3/library/csv.html
 # would like to clean up and remove duplicate station locations to reduce loop runtime
 # Division,Line,Station_Name,Station_Latitude,Station_Longitude,Route_1,Route_2,Route_3,Route_4,Route_5,Route_6,Route_7,Route_8,Route_9,Route_10,Route_11,Entrance_Type,Entry,Exit_Only,Vending,Staffing,Staff_Hours,ADA,ADA_Notes,Free_Crossover,North_South_Street,East_West_Street,Corner,Latitude,Longitude
@@ -105,33 +104,37 @@ with open('citibike_worst_asc.csv') as csvfile:
 
 #  computation of distance to metro station using data from csv files
 def get_distance_citibike_best():
-    citibike_best_distance = []
+    citibike_best_distance = {'stations' : [], 'distance_list': []}
 
     for citibike in citibike_best_stations_csv:
         distance_to_metro = 10000
         shortest_metro = {}
+
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['lat'], citibike['lon']))
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
                 shortest_metro = metro
-        citibike_best_distance.append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        citibike_best_distance['stations'].append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        citibike_best_distance['distance_list'].append(distance_to_metro)
     return citibike_best_distance
 
 def get_distance_citibike_worst():
-    citibike_worst_distance = []
+    citibike_worst_distance = {'stations' : [], 'distance_list': []}
 
     for citibike in citibike_worst_stations_csv:
         distance_to_metro = 10000
         shortest_metro = {}
+
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['lat'], citibike['lon']))
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
                 shortest_metro = metro
-        citibike_worst_distance.append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        citibike_worst_distance['stations'].append({'citibike_station': citibike, 'metro_station': shortest_metro, 'distance_to_metro': distance_to_metro})
+        citibike_worst_distance['distance_list'].append(distance_to_metro)
     return citibike_worst_distance
 
 # print(get_distance_citibike_best())
@@ -140,6 +143,7 @@ def get_distance_citibike_worst():
 # look at distance from best stations and look with distance from worst stations
 # loop over these objects to print out distance.
 # do the distances have a trend, avg distance?
+
 def print_popular_distances():
     best_distances = get_distance_citibike_best()
     worst_distances = get_distance_citibike_worst()
@@ -149,19 +153,18 @@ def print_popular_distances():
     worst_count = 0
 
     print("Best station distances")
-    for station in best_distances:
+    for station in best_distances['stations']:
         best_avg += station['distance_to_metro']
         best_count += 1
         print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
 
     print("Worst station distances")
-    for station in worst_distances:
+    for station in worst_distances['stations']:
         worst_avg += station['distance_to_metro']
         worst_count += 1
         print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
-    print("Best Citibike station AVG distance to Metro: ", best_avg/best_count)
-    print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count)
-
+    print("Best Citibike station AVG distance to Metro: ", best_avg/best_count, 'max distance: ', max(best_distances['distance_list']), 'min distance: ', min(best_distances['distance_list']))
+    print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count, 'max distance: ', max(worst_distances['distance_list']), 'min distance: ', min(worst_distances['distance_list']))
 
 # compute distance to metro based on data from api of totalDocs at a citibike station
 # request object gives us access to json method
@@ -259,11 +262,6 @@ def get_distance_least_totalDocks():
 # print(get_distance_most_totalDocks())
 # print(get_distance_least_totalDocks())
 
-def get_max(list):
-    return max(list)
-
-def get_min(list):
-    return min(list)
 
 def print_docks_distances():
     most_docks_distances = get_distance_most_totalDocks()
@@ -284,8 +282,8 @@ def print_docks_distances():
         least_avg += station['distance_to_metro']
         least_count += 1
         print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['stationName'] )
-    print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count, 'max distance: ', get_max(most_docks_distances['distance_list']), 'min distance: ', get_min(most_docks_distances['distance_list']))
-    print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count, 'max distance: ', get_max(least_docks_distances['distance_list']), 'min distance: ', get_min(least_docks_distances['distance_list']))
+    print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count, 'max distance: ', max(most_docks_distances['distance_list']), 'min distance: ', min(most_docks_distances['distance_list']))
+    print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count, 'max distance: ', max(least_docks_distances['distance_list']), 'min distance: ', min(least_docks_distances['distance_list']))
 
 
 # print_docks_distances()
