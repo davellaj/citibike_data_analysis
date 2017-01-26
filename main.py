@@ -112,7 +112,6 @@ def get_distance_citibike_best():
         shortest_metro = {}
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['lat'], citibike['lon']))
-            # temp_distance = haversine(metro['lon'], metro['lat'], citibike['lon'], citibike['lat'])
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
@@ -128,7 +127,6 @@ def get_distance_citibike_worst():
         shortest_metro = {}
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['lat'], citibike['lon']))
-            # temp_distance = haversine(metro['lon'], metro['lat'], citibike['lon'], citibike['lat'])
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
@@ -164,8 +162,6 @@ def print_popular_distances():
     print("Best Citibike station AVG distance to Metro: ", best_avg/best_count)
     print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count)
 
-print_popular_distances()
-
 
 # compute distance to metro based on data from api of totalDocs at a citibike station
 # request object gives us access to json method
@@ -183,43 +179,65 @@ r = requests.get("https://feeds.citibikenyc.com/stations/stations.json")
 data = r.json()
 
 citibike_stations_list = data['stationBeanList']
-# print(citibike_stations_list[0]['totalDocks']
+# sort citibike_stations_list by total docks in ascending order. This is a list of dictionaries with multiple key value pairs
+citibike_stations_list.sort(key=lambda sta: sta['totalDocks'])
+
+# start at index 13 because the first 12 were stations that were not in use yet woth 0 docks
+least_totalDocks_stations = citibike_stations_list[13:33]
+most_totalDocks_stations = citibike_stations_list[-20:]
+
+# for item in least_totalDocks_stations:
+#     print('totalDocks', item['totalDocks'], "station ", item['stationName'])
+
+# for item in most_totalDocks_stations:
+#     print('totalDocks', item['totalDocks'], "station ", item['stationName'])
+# sorting
+# docks = [{"total_stations": 3}, {"total_stations": 5}]
+# two count functions below are the same the first is just shorthand
+# count = [sta["total_docks"] for sta in stations]
+# count = []; for sta in stations: count.append(sta["total_docks"])
+# stations.sort(key=lambda sta: sta["total_docks"])
+    # lambda sta: sta["total_docks"]
+# lamda is a function and the above is a shorthand to sort a list of dictionaries, below are longhand.
+# (sta) => sta["total_docks"]
+# def <anonymous>(sta): return sta["total_docks"]
+# writing a reverse/descending sort --> lambda sta: -sta["total_docks"]
 
 # example output:
-most_totalDocks_stations = [
-                {
-                    'id': 3438, 'stationName': 'E 76 St & 3 Ave', 'availableDocks': 23, 'totalDocks': 31, 'latitude': 40.772248537721744, 'longitude': -73.95842134952545,
-                     'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 7, 'stAddress1': 'E 76 St & 3 Ave', 'stAddress2': '', 'city': '', 'postalCode': '',
-                      'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 01:29:34 AM', 'landMark': ''
-                },
-                {
-                    'id': 79, 'stationName': 'Franklin St & W Broadway', 'availableDocks': 6, 'totalDocks': 33, 'latitude': 40.71911552, 'longitude': -74.00666661,
-                     'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 27, 'stAddress1': 'Franklin St & W Broadway', 'stAddress2': '', 'city': '', 'postalCode': '',
-                      'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 12:55:07 AM', 'landMark': ''
-                },
-                {
-                    'id': 82, 'stationName': 'St James Pl & Pearl St', 'availableDocks': 16, 'totalDocks': 27, 'latitude': 40.71117416, 'longitude': -74.00016545,
-                     'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 11, 'stAddress1': 'St James Pl & Pearl St', 'stAddress2': '', 'city': '', 'postalCode': '',
-                     'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 12:54:58 AM', 'landMark': ''
-                }
-            ]
-least_totalDocks_stations = [
-                {
-                    'id': 3443, 'stationName': 'W 52 St & 6 Ave', 'availableDocks': 39, 'totalDocks': 41, 'latitude': 40.76132983124814, 'longitude': -73.97982001304626,
-                     'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 1, 'stAddress1': 'W 52 St & 6 Ave', 'stAddress2': '', 'city': '', 'postalCode': '',
-                      'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 01:31:19 AM', 'landMark': ''
-                },
-                {
-                    'id': 3440, 'stationName': 'Fulton St & Adams St', 'availableDocks': 39, 'totalDocks': 43, 'latitude': 40.692418292578466, 'longitude': -73.98949474096298,
-                     'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 4, 'stAddress1': 'Fulton St & Adams St', 'stAddress2': '', 'city': '', 'postalCode': '',
-                      'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 01:30:54 AM', 'landMark': ''
-                },
-                {
-                    'id': 72, 'stationName': 'W 52 St & 11 Ave', 'availableDocks': 36, 'totalDocks': 39, 'latitude': 40.76727216, 'longitude': -73.99392888,
-                     'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 2, 'stAddress1': 'W 52 St & 11 Ave', 'stAddress2': '', 'city': '', 'postalCode': '',
-                      'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 12:22:17 AM', 'landMark': ''
-                }
-            ]
+# most_totalDocks_stations = [
+#                 {
+#                     'id': 3438, 'stationName': 'E 76 St & 3 Ave', 'availableDocks': 23, 'totalDocks': 31, 'latitude': 40.772248537721744, 'longitude': -73.95842134952545,
+#                      'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 7, 'stAddress1': 'E 76 St & 3 Ave', 'stAddress2': '', 'city': '', 'postalCode': '',
+#                       'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 01:29:34 AM', 'landMark': ''
+#                 },
+#                 {
+#                     'id': 79, 'stationName': 'Franklin St & W Broadway', 'availableDocks': 6, 'totalDocks': 33, 'latitude': 40.71911552, 'longitude': -74.00666661,
+#                      'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 27, 'stAddress1': 'Franklin St & W Broadway', 'stAddress2': '', 'city': '', 'postalCode': '',
+#                       'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 12:55:07 AM', 'landMark': ''
+#                 },
+#                 {
+#                     'id': 82, 'stationName': 'St James Pl & Pearl St', 'availableDocks': 16, 'totalDocks': 27, 'latitude': 40.71117416, 'longitude': -74.00016545,
+#                      'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 11, 'stAddress1': 'St James Pl & Pearl St', 'stAddress2': '', 'city': '', 'postalCode': '',
+#                      'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 12:54:58 AM', 'landMark': ''
+#                 }
+#             ]
+# least_totalDocks_stations = [
+#                 {
+#                     'id': 3443, 'stationName': 'W 52 St & 6 Ave', 'availableDocks': 39, 'totalDocks': 41, 'latitude': 40.76132983124814, 'longitude': -73.97982001304626,
+#                      'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 1, 'stAddress1': 'W 52 St & 6 Ave', 'stAddress2': '', 'city': '', 'postalCode': '',
+#                       'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 01:31:19 AM', 'landMark': ''
+#                 },
+#                 {
+#                     'id': 3440, 'stationName': 'Fulton St & Adams St', 'availableDocks': 39, 'totalDocks': 43, 'latitude': 40.692418292578466, 'longitude': -73.98949474096298,
+#                      'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 4, 'stAddress1': 'Fulton St & Adams St', 'stAddress2': '', 'city': '', 'postalCode': '',
+#                       'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 01:30:54 AM', 'landMark': ''
+#                 },
+#                 {
+#                     'id': 72, 'stationName': 'W 52 St & 11 Ave', 'availableDocks': 36, 'totalDocks': 39, 'latitude': 40.76727216, 'longitude': -73.99392888,
+#                      'statusValue': 'In Service', 'statusKey': 1, 'availableBikes': 2, 'stAddress1': 'W 52 St & 11 Ave', 'stAddress2': '', 'city': '', 'postalCode': '',
+#                       'location': '', 'altitude': '', 'testStation': False, 'lastCommunicationTime': '2017-01-26 12:22:17 AM', 'landMark': ''
+#                 }
+#             ]
 
 def get_distance_most_totalDocks():
     most_totalDocks_distance = []
@@ -229,7 +247,6 @@ def get_distance_most_totalDocks():
         shortest_metro = {}
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['latitude'], citibike['longitude']))
-            # temp_distance = haversine(metro['lon'], metro['lat'], citibike['lon'], citibike['lat'])
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
@@ -245,7 +262,6 @@ def get_distance_least_totalDocks():
         shortest_metro = {}
         for metro in metro_stations_csv:
             temp_distance = manhattan_distance((metro['lat'], metro['lon']), (citibike['latitude'], citibike['longitude']))
-            # temp_distance = haversine(metro['lon'], metro['lat'], citibike['lon'], citibike['lat'])
 
             if temp_distance < distance_to_metro:
                 distance_to_metro = temp_distance
@@ -280,7 +296,7 @@ def print_docks_distances():
 
 
 print_docks_distances()
-print_popular_distances()
+# print_popular_distances()
 
 
 
@@ -325,17 +341,6 @@ print_popular_distances()
 #         print item['phone']
 #
 # locu_search('new york')
-
-
-# sorting
-# docks = [{"total_stations": 3}, {"total_stations": 5}]
-# count = [sta["total_docks"] for sta in stations]
-# count = []; for sta in stations: count.append(sta["total_docks"])
-# stations.sort(key=lambda sta: sta["total_docks"])
-# lambda sta: sta["total_docks"]
-# (sta) => sta["total_docks"]
-# def <anonymous>(sta): return sta["total_docks"]
-# lambda sta: -sta["total_docks"]
 
 # graphing
 # matplotlib
