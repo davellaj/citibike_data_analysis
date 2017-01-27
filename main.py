@@ -61,6 +61,7 @@ def manhattan_distance(start, end):
 # getting data from metro station csv file: https://docs.python.org/3/library/csv.html
 # would like to clean up and remove duplicate station locations to reduce loop runtime
 # Division,Line,Station_Name,Station_Latitude,Station_Longitude,Route_1,Route_2,Route_3,Route_4,Route_5,Route_6,Route_7,Route_8,Route_9,Route_10,Route_11,Entrance_Type,Entry,Exit_Only,Vending,Staffing,Staff_Hours,ADA,ADA_Notes,Free_Crossover,North_South_Street,East_West_Street,Corner,Latitude,Longitude
+
 metro_stations_csv = []
 with open('metro_station_entrances_nyc.csv') as csvfile:
     reader = csv.DictReader(csvfile)
@@ -156,15 +157,15 @@ def print_popular_distances():
     for station in best_distances['stations']:
         best_avg += station['distance_to_metro']
         best_count += 1
-        print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
+        print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
 
     print("Worst station distances")
     for station in worst_distances['stations']:
         worst_avg += station['distance_to_metro']
         worst_count += 1
-        print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
-    print("Best Citibike station AVG distance to Metro: ", best_avg/best_count, 'max distance: ', max(best_distances['distance_list']), 'min distance: ', min(best_distances['distance_list']))
-    print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count, 'max distance: ', max(worst_distances['distance_list']), 'min distance: ', min(worst_distances['distance_list']))
+        print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
+    print("Best Citibike station AVG distance to Metro: ", best_avg/best_count * 1000, 'max distance: ', max(best_distances['distance_list']) * 1000, 'min distance: ', min(best_distances['distance_list']) * 1000)
+    print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count * 1000, 'max distance: ', max(worst_distances['distance_list']) * 1000, 'min distance: ', min(worst_distances['distance_list']) * 1000)
 
 # compute distance to metro based on data from api of totalDocs at a citibike station
 # request object gives us access to json method
@@ -182,10 +183,11 @@ r = requests.get("https://feeds.citibikenyc.com/stations/stations.json")
 data = r.json()
 
 citibike_stations_list = data['stationBeanList']
-# sort citibike_stations_list by total docks in ascending order. This is a list of dictionaries with multiple key value pairs
+ # data: is a list of dictionaries with multiple key value pairs
+# sort citibike_stations_list by total docks in ascending order.
 citibike_stations_list.sort(key=lambda sta: sta['totalDocks'])
 
-# start at index 13 because the first 12 were stations that were not in use yet woth 0 docks
+
 least_totalDocks_stations = citibike_stations_list[13:33]
 most_totalDocks_stations = citibike_stations_list[-20:]
 
@@ -262,6 +264,9 @@ def get_distance_least_totalDocks():
 # print(get_distance_most_totalDocks())
 # print(get_distance_least_totalDocks())
 
+# print single string with formatting tags:
+# format code 6.2f width.persicion(format code which is f for 14 points)
+# print("Yada yada %6.2f %6.2f %6.2f" % (avg, min, max))
 
 def print_docks_distances():
     most_docks_distances = get_distance_most_totalDocks()
@@ -275,21 +280,30 @@ def print_docks_distances():
     for station in most_docks_distances['stations']:
         most_avg += station['distance_to_metro']
         most_count += 1
-        print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['stationName'] )
+        print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['stationName'] )
+        # formatted but will not format text with this distance
+        # print("Distance to metro: %6.2f Citibike Station:" % (station['distance_to_metro'] * 1000), station['citibike_station']['stationName'])
+
 
     print("Least total docks citibike station distances")
     for station in least_docks_distances['stations']:
         least_avg += station['distance_to_metro']
         least_count += 1
-        print("Distance to metro: ", station['distance_to_metro'], "Citibike Station: ", station['citibike_station']['stationName'] )
-    print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count, 'max distance: ', max(most_docks_distances['distance_list']), 'min distance: ', min(most_docks_distances['distance_list']))
-    print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count, 'max distance: ', max(least_docks_distances['distance_list']), 'min distance: ', min(least_docks_distances['distance_list']))
+        print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['stationName'] )
+    print("----------------------------------------------------------------------------------------------")
+    # print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count * 1000, 'max distance: ', max(most_docks_distances['distance_list']) * 1000, 'min distance: ', min(most_docks_distances['distance_list']) * 1000)
+    # format in terminal
+    print("Most total docks Citibike station-Metro AVG Distance: %6.2f" % (most_avg/most_count * 1000))
+    print("Most total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(most_docks_distances['distance_list']) * 1000, min(most_docks_distances['distance_list']) * 1000))
+    print("----------------------------------------------------------------------------------------------")
+    # print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count * 1000, 'max distance: ', max(least_docks_distances['distance_list']) * 1000, 'min distance: ', min(least_docks_distances['distance_list'])* 1000)
+    # format in terminal
+    print("Least total docks Citibike station-Metro AVG Distance: %6.2f" % (least_avg/least_count * 1000))
+    print("Least total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(least_docks_distances['distance_list']) * 1000, min(least_docks_distances['distance_list']) * 1000))
 
 
-# print_docks_distances()
+print_docks_distances()
 # print_popular_distances()
-
-
 
 
 
@@ -345,6 +359,30 @@ def print_docks_distances():
 # (sta) => sta["total_docks"]
 # def <anonymous>(sta): return sta["total_docks"]
 # writing a reverse/descending sort --> lambda sta: -sta["total_docks"]
+
+# further notes on sorting and presentation prep
+# stationList.sort(sta => sta['totalDocks']) -- javascript sort function
+# stationList.sort((s1,s2) => s1['totalDocks'] - s2['totalDocks']) javascript compare function calls multiple times -performance nlogn
+# stationList.sort((s1, s2) => s1['docks'] - s2['dock'])
+# python uses key function calls it once and therefore much better performance
+#  (sta) => sta['totalDocks']   --lamda function in javascript. Python had this for many years javascript just incorporated it in 2015
+# start at index 13 because the first 12 were stations that were not in use yet with 0 docks
+
+# js compare function needs to call your function implementing using c
+# key function only calls once python is implementing c
+ # typos important
+# presentation
+
+# stationList.sort(sta => sta['totalDocks'])
+# stationList.sort((s1,s2) => s1['totalDocks'] - s2['totalDocks'])
+# stationList.sort((s1, s2) => s1['docks'] - s2['dock'])
+# NaN
+# s1['totalDock']
+# KeyError
+# s1.get('totalDock', 0)
+# import this
+# Errors should never pass silently.
+# Unless explicitly silenced.
 
 # notes on graphing ---------------------
 # graphing
