@@ -145,6 +145,10 @@ def get_distance_citibike_worst():
 # loop over these objects to print out distance.
 # do the distances have a trend, avg distance?
 
+# print("Most total docks Citibike station-Metro AVG Distance: %6.2f" % (most_avg/most_count * 1000))
+# print("Most total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(most_docks_distances['distance_list']) * 1000, min(most_docks_distances['distance_list']) * 1000))
+# print("----------------------------------------------------------------------------------------------")
+
 def print_popular_distances():
     best_distances = get_distance_citibike_best()
     worst_distances = get_distance_citibike_worst()
@@ -164,9 +168,17 @@ def print_popular_distances():
         worst_avg += station['distance_to_metro']
         worst_count += 1
         print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
-    print("Best Citibike station AVG distance to Metro: ", best_avg/best_count * 1000, 'max distance: ', max(best_distances['distance_list']) * 1000, 'min distance: ', min(best_distances['distance_list']) * 1000)
-    print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count * 1000, 'max distance: ', max(worst_distances['distance_list']) * 1000, 'min distance: ', min(worst_distances['distance_list']) * 1000)
-
+    print("-------------------------------------------------------------------------------------------------------------------------------")
+    # add formatting in terminal
+    # print("Best Citibike station AVG distance to Metro: ", best_avg/best_count * 1000, 'max distance: ', max(best_distances['distance_list']) * 1000, 'min distance: ', min(best_distances['distance_list']) * 1000)
+    print("Best Citibike station-Metro AVG Distance: %6.2f" % (best_avg/best_count * 1000))
+    print("Best Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(best_distances['distance_list']) * 1000, min(best_distances['distance_list']) * 1000))
+    print("-------------------------------------------------------------------------------------------------------------------------------")
+    # add formatting in terminal
+    # print("Worst Citibike station AVG distance to Metro: ", worst_avg/worst_count * 1000, 'max distance: ', max(worst_distances['distance_list']) * 1000, 'min distance: ', min(worst_distances['distance_list']) * 1000)
+    print("Worst Citibike station-Metro, AVG Distance: %6.2f" % (worst_avg/worst_count * 1000))
+    print("Worst Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(worst_distances['distance_list']) * 1000, min(worst_distances['distance_list']) * 1000))
+    print("-------------------------------------------------------------------------------------------------------------------------------")
 # compute distance to metro based on data from api of totalDocs at a citibike station
 # request object gives us access to json method
 # http://www.citibikenyc.com/stations/json
@@ -284,26 +296,25 @@ def print_docks_distances():
         # formatted but will not format text with this distance
         # print("Distance to metro: %6.2f Citibike Station:" % (station['distance_to_metro'] * 1000), station['citibike_station']['stationName'])
 
-
     print("Least total docks citibike station distances")
     for station in least_docks_distances['stations']:
         least_avg += station['distance_to_metro']
         least_count += 1
         print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['stationName'] )
-    print("----------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------------------------------------------------------")
     # print("Most total docks Citibike station AVG distance to Metro: ", most_avg/most_count * 1000, 'max distance: ', max(most_docks_distances['distance_list']) * 1000, 'min distance: ', min(most_docks_distances['distance_list']) * 1000)
     # format in terminal
-    print("Most total docks Citibike station-Metro AVG Distance: %6.2f" % (most_avg/most_count * 1000))
+    print("Most total docks Citibike station-Metro, AVG Distance: %6.2f" % (most_avg/most_count * 1000))
     print("Most total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(most_docks_distances['distance_list']) * 1000, min(most_docks_distances['distance_list']) * 1000))
-    print("----------------------------------------------------------------------------------------------")
+    print("-------------------------------------------------------------------------------------------------------------------------------")
     # print("Least total docks Citibike station AVG distance to Metro: ", least_avg/least_count * 1000, 'max distance: ', max(least_docks_distances['distance_list']) * 1000, 'min distance: ', min(least_docks_distances['distance_list'])* 1000)
     # format in terminal
-    print("Least total docks Citibike station-Metro AVG Distance: %6.2f" % (least_avg/least_count * 1000))
+    print("Least total docks Citibike station-Metro, AVG Distance: %6.2f" % (least_avg/least_count * 1000))
     print("Least total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(least_docks_distances['distance_list']) * 1000, min(least_docks_distances['distance_list']) * 1000))
-
+    print("-------------------------------------------------------------------------------------------------------------------------------")
 
 print_docks_distances()
-# print_popular_distances()
+print_popular_distances()
 
 
 
