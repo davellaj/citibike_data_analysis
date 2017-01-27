@@ -145,10 +145,6 @@ def get_distance_citibike_worst():
 # loop over these objects to print out distance.
 # do the distances have a trend, avg distance?
 
-# print("Most total docks Citibike station-Metro AVG Distance: %6.2f" % (most_avg/most_count * 1000))
-# print("Most total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(most_docks_distances['distance_list']) * 1000, min(most_docks_distances['distance_list']) * 1000))
-# print("----------------------------------------------------------------------------------------------")
-
 def print_popular_distances():
     best_distances = get_distance_citibike_best()
     worst_distances = get_distance_citibike_worst()
@@ -156,13 +152,13 @@ def print_popular_distances():
     best_count = 0
     worst_avg = 0
     worst_count = 0
-
+    print("-------------------------------------------------------------------------------------------------------------------------------")
     print("Best station distances")
     for station in best_distances['stations']:
         best_avg += station['distance_to_metro']
         best_count += 1
         print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['citibike_station_name'] )
-
+    print("-------------------------------------------------------------------------------------------------------------------------------")
     print("Worst station distances")
     for station in worst_distances['stations']:
         worst_avg += station['distance_to_metro']
@@ -179,6 +175,7 @@ def print_popular_distances():
     print("Worst Citibike station-Metro, AVG Distance: %6.2f" % (worst_avg/worst_count * 1000))
     print("Worst Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(worst_distances['distance_list']) * 1000, min(worst_distances['distance_list']) * 1000))
     print("-------------------------------------------------------------------------------------------------------------------------------")
+
 # compute distance to metro based on data from api of totalDocs at a citibike station
 # request object gives us access to json method
 # http://www.citibikenyc.com/stations/json
@@ -199,9 +196,9 @@ citibike_stations_list = data['stationBeanList']
 # sort citibike_stations_list by total docks in ascending order.
 citibike_stations_list.sort(key=lambda sta: sta['totalDocks'])
 
-
 least_totalDocks_stations = citibike_stations_list[13:33]
 most_totalDocks_stations = citibike_stations_list[-20:]
+
 
 # example output:
 # most_totalDocks_stations = [
@@ -276,10 +273,6 @@ def get_distance_least_totalDocks():
 # print(get_distance_most_totalDocks())
 # print(get_distance_least_totalDocks())
 
-# print single string with formatting tags:
-# format code 6.2f width.persicion(format code which is f for 14 points)
-# print("Yada yada %6.2f %6.2f %6.2f" % (avg, min, max))
-
 def print_docks_distances():
     most_docks_distances = get_distance_most_totalDocks()
     least_docks_distances = get_distance_least_totalDocks()
@@ -287,7 +280,7 @@ def print_docks_distances():
     most_count = 0
     least_avg = 0
     least_count = 0
-
+    print("-------------------------------------------------------------------------------------------------------------------------------")
     print("Most total docks citibike station distances")
     for station in most_docks_distances['stations']:
         most_avg += station['distance_to_metro']
@@ -295,7 +288,7 @@ def print_docks_distances():
         print("Distance to metro: ", station['distance_to_metro'] * 1000, "Citibike Station: ", station['citibike_station']['stationName'] )
         # formatted but will not format text with this distance
         # print("Distance to metro: %6.2f Citibike Station:" % (station['distance_to_metro'] * 1000), station['citibike_station']['stationName'])
-
+    print("-------------------------------------------------------------------------------------------------------------------------------")
     print("Least total docks citibike station distances")
     for station in least_docks_distances['stations']:
         least_avg += station['distance_to_metro']
@@ -313,7 +306,7 @@ def print_docks_distances():
     print("Least total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(least_docks_distances['distance_list']) * 1000, min(least_docks_distances['distance_list']) * 1000))
     print("-------------------------------------------------------------------------------------------------------------------------------")
 
-print_docks_distances()
+# print_docks_distances()
 print_popular_distances()
 
 
@@ -365,7 +358,7 @@ print_popular_distances()
 # count = [sta["total_docks"] for sta in stations]
 # count = []; for sta in stations: count.append(sta["total_docks"])
 # stations.sort(key=lambda sta: sta["total_docks"])
-    # lambda sta: sta["total_docks"]
+# lambda sta: sta["total_docks"]
 # lamda is a function and the above is a shorthand to sort a list of dictionaries, below are longhand.
 # (sta) => sta["total_docks"]
 # def <anonymous>(sta): return sta["total_docks"]
@@ -395,8 +388,26 @@ print_popular_distances()
 # Errors should never pass silently.
 # Unless explicitly silenced.
 
+
+# demonstration sort in python:
+# items = [
+#   { 'name': 'Edward', 'value': 21 },
+#   { 'name': 'Sharpe', 'value': 37 },
+#   { 'name': 'And', 'value': 45 },
+#   { 'name': 'The', 'value': -12 },
+#   { 'name': 'Magnetic', 'value': 13 },
+#   { 'name': 'Zeros', 'value': 37 }
+# ]
+# items.sort(key=lambda sta: sta['value'])
+# print(items)
+
 # notes on graphing ---------------------
 # graphing
 # matplotlib
 # plt.show()
 # plt.save("figure.png")
+
+# notes on formatting
+# print single string with formatting tags:
+# format code 6.2f width.persicion(format code which is f for 14 points)
+# print("Yada yada %6.2f %6.2f %6.2f" % (avg, min, max))
