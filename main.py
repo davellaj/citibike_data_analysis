@@ -306,7 +306,7 @@ def print_docks_distances():
     print("Least total docks Citibike station-Metro, MAX/MIN Distance: Max distance: %6.2f, Min distance: %6.2f" % (max(least_docks_distances['distance_list']) * 1000, min(least_docks_distances['distance_list']) * 1000))
     print("-------------------------------------------------------------------------------------------------------------------------------")
 
-# print_docks_distances()
+print_docks_distances()
 print_popular_distances()
 
 
