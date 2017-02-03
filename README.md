@@ -15,6 +15,10 @@ Data of latitude and longitude coordinates for all Metro Station locations in NY
 # Technology
 Python3 was used for this small program that can be run in the terminal. If you would like to run the scripts on your own computer you will need Python 3.6.
 
+To run this program:
+* Clone this repository: `git clone https://github.com/davellaj/citibike_data_analysis.git`
+* run the command: `python3 main.py`
+
 Next steps will include:
 - Visualizing data results with [Matplot](http://matplotlib.org/)
 - Graphing Citibike API's real time station data
